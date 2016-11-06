@@ -1,0 +1,30 @@
+\ProvidesPackage{asciimage}
+\RequirePackage{luacode}
+
+\begin{luacode*}
+local asciimage = require "asciimage"
+local asciimage_buffer = {}
+
+local function asciimage_buffer_process(line)
+  if line:match "asciimage" then return line end
+  asciimage_buffer[#asciimage_buffer+1]=line
+  return ""
+end
+
+function asciimage_buffer_start()
+  asciimage_buffer = {}
+  luatexbase.add_to_callback("process_input_buffer", asciimage_buffer_process, "Process asciimage")
+end
+
+function asciimage_buffer_stop()
+  luatexbase.remove_from_callback('process_input_buffer', 'Process asciimage')
+  local image = asciimage.parse(asciimage_buffer)
+  for k, v in ipairs(image.objects) do tex.print(v.type) end
+end
+
+\end{luacode*}
+
+\newenvironment{asciimage}{\luaexec{asciimage_buffer_start()}}
+{\luaexec{asciimage_buffer_stop()}}
+
+\endinput
