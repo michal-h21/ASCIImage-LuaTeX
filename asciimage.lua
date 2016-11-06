@@ -132,7 +132,8 @@ local lines = {}
 for line in test:gmatch("([^\n]+)") do
   lines[#lines+1]= line
 end
-asciimage.parse(lines)
+local image = asciimage.parse(lines)
+print_objects(image.objects)
 
 return asciimage
 
