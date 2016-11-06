@@ -85,13 +85,14 @@ local function parse_objects(grid)
       insert_current()
     else
       if current_object then
-        make_current("poly", obj) -- if current_object exists, it must be polygon
+        make_current("poly", obj) -- if the current_object exists, it must be a polygon
       else
-        make_current("point", obj) -- always start polygon as point
+        make_current("point", obj) -- always start polygon as a point
       end
     end
   end
   insert_current()
+
   return objects
 end
 
