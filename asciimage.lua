@@ -35,15 +35,17 @@ local function parse_objects(grid)
     for x = 1,#line do
       local char = line[x]
       if allowed_chars[char] then
-        -- we need to count appearance of the character. it may appear once (polygon or point), twice (line), or more than twice (ellipse)
+        -- we need to count appearance of the character. it may appear once
+        -- (polygon or point), twice (line), or more than twice (ellipse)
         local token = tokens[char] or {}
         token[#token+1] = {x,y}
         tokens[char] = token
       end
     end
   end
-  local current_object = {}
+  local current_object
   local insert_current = function()
+    -- current_object can be nil, it is OK
     objects[#objects+1] = current_object 
     current_object = nil
   end
@@ -61,36 +63,28 @@ local function parse_objects(grid)
   for _, char in ipairs(allowed_sequence) do
     local obj = tokens[char]
     if not obj then 
+      -- if current object is empty, we must stop any previous polygon objects
       insert_current()
     elseif #obj == 2 then
-      insert_current()
-      make_current("line", obj)
-      -- current_object = obj
-      -- current_object.type = "line"
+      insert_current()          -- lines and ellipses are standalone objects, we must
+      make_current("line", obj) -- close previous objects and then insert them immediatelly
       insert_current()
     elseif #obj > 2 then
       insert_current()
       make_current("ellipse", obj)
-      -- current_object = obj
-      -- current_object.type = "ellipse"
       insert_current()
     else
       if current_object then
-        make_current("poly", obj)
-        -- current_object.type = "poly"
+        make_current("poly", obj) -- if current_object exists, it must be polygon
       else
-        make_current("point", obj)
-        -- current_object = {}
-        -- current_object.type = "point"
+        make_current("point", obj) -- always start polygon as point
       end
-      -- current_object[#current_object+1] = obj
     end
   end
   insert_current()
 
   for _, obj in ipairs(objects) do
     local points = {}
-    -- print(obj.type, #obj.points)
     for _, point in ipairs(obj.points) do
       points[#points+1] = point[1] .. ","..point[2]
     end
