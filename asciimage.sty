@@ -3,6 +3,8 @@
 
 \begin{luacode*}
 local asciimage = require "asciimage"
+local render = require "pict2e-render"
+
 local asciimage_buffer = {}
 
 local function asciimage_buffer_process(line)
@@ -19,7 +21,8 @@ end
 function asciimage_buffer_stop()
   luatexbase.remove_from_callback('process_input_buffer', 'Process asciimage')
   local image = asciimage.parse(asciimage_buffer)
-  for k, v in ipairs(image.objects) do tex.print(v.type) end
+  tex.print(render(image))
+  -- for k, v in ipairs(image.objects) do tex.print(v.type) end
 end
 
 \end{luacode*}
