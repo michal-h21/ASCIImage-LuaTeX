@@ -27,6 +27,16 @@ local function parse_line(line)
   return characters
 end
 
+local function print_objects(objects)
+  for _, obj in ipairs(objects) do
+    local points = {}
+    for _, point in ipairs(obj.points) do
+      points[#points+1] = point[1] .. ","..point[2]
+    end
+    print(obj.type, "(".. table.concat(points,"), (").. ")" )
+  end
+end
+
 local function parse_objects(grid)
   local tokens = {}
   local objects = {}
@@ -82,14 +92,6 @@ local function parse_objects(grid)
     end
   end
   insert_current()
-
-  for _, obj in ipairs(objects) do
-    local points = {}
-    for _, point in ipairs(obj.points) do
-      points[#points+1] = point[1] .. ","..point[2]
-    end
-    print(obj.type, "(".. table.concat(points,"), (").. ")" )
-  end
   return objects
 end
 
