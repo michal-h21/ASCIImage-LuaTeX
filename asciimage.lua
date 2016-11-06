@@ -37,9 +37,8 @@ local function print_objects(objects)
   end
 end
 
-local function parse_objects(grid)
+local function get_tokens(grid)
   local tokens = {}
-  local objects = {}
   for y = 1, #grid do
     local line = grid[y]
     for x = 1,#line do
@@ -53,6 +52,11 @@ local function parse_objects(grid)
       end
     end
   end
+  return tokens
+end
+
+local function get_objects(tokens)
+  local objects = {}
   local current_object
   local insert_current = function()
     -- current_object can be nil, it is OK
@@ -92,7 +96,12 @@ local function parse_objects(grid)
     end
   end
   insert_current()
+  return objects
+end
 
+local function parse_objects(grid)
+  local tokens = get_tokens(grid)
+  local objects = get_objects(tokens)
   return objects
 end
 
