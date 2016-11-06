@@ -142,6 +142,7 @@ for line in test:gmatch("([^\n]+)") do
   lines[#lines+1]= line
 end
 local image = asciimage.parse(lines)
+print(image.width, image.height)
 print_objects(image.objects)
 
 return asciimage
