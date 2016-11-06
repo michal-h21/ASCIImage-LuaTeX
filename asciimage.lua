@@ -43,14 +43,8 @@ local function parse_objects(grid)
     end
   end
   local current_object = {}
-  local copy_table = function(tbl) 
-    if not tbl then return nil end
-    local t = {}
-    for k,v in pairs(tbl) do t[k] = v end
-    return t
-  end
   local insert_current = function()
-    objects[#objects+1] = copy_table(current_object)
+    objects[#objects+1] = current_object 
     current_object = nil
   end
   local make_current = function(typ, obj)
